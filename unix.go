@@ -1,4 +1,4 @@
-// +build darwin freebsd linux netbsd openbsd
+//go:build darwin || freebsd || linux || netbsd || openbsd
 
 package main
 
@@ -7,7 +7,7 @@ import (
 	"syscall"
 )
 
-var osShell string = "bash"
+var osShell string = "/bin/sh"
 
 const osHaveSigTerm = true
 
@@ -16,7 +16,7 @@ func ShellInvocationCommand(interactive bool, root, command string) []string {
 	if interactive {
 		shellArgument = "-ic"
 	}
-	shellCommand := fmt.Sprintf("cd \"%s\"; source .profile 2>/dev/null; exec %s", root, command)
+	shellCommand := fmt.Sprintf("cd \"%s\"; . ./.profile 2>/dev/null; exec %s", root, command)
 	return []string{osShell, shellArgument, shellCommand}
 }
 
