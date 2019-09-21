@@ -16,7 +16,7 @@ func ShellInvocationCommand(interactive bool, root, command string) []string {
 	if interactive {
 		shellArgument = "-ic"
 	}
-	shellCommand := fmt.Sprintf("cd \"$1\" || exit 66; test -e .profile && . ./.profile; exec %s", command)
+	shellCommand := fmt.Sprintf("cd \"$1\" || exit 66; test -f .profile && . ./.profile; exec %s", command)
 	return []string{osShell, shellArgument, shellCommand, "sh", root}
 }
 
