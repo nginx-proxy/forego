@@ -3,14 +3,35 @@ package main
 import (
 	"fmt"
 	"os"
-	"regexp"
+	"sync"
 
 	"github.com/subosito/gotenv"
 )
 
-var envEntryRegexp = regexp.MustCompile("^([A-Za-z_0-9]+)=(.*)$")
+type Env struct {
+	m sync.Map
+}
 
-type Env map[string]string
+func (e *Env) Get(key string) string {
+	value, ok := e.m.Load(key)
+	if !ok {
+		return ""
+	}
+	return value.(string)
+}
+
+func (e *Env) Set(key, value string) {
+	e.m.Store(key, value)
+}
+
+func (e *Env) Delete(key string) {
+	e.m.Delete(key)
+}
+
+// NewEnv makes a new environment
+func NewEnv() *Env {
+	return &Env{sync.Map{}}
+}
 
 type envFiles []string
 
@@ -23,13 +44,14 @@ func (e *envFiles) Set(value string) error {
 	return nil
 }
 
-func loadEnvs(files []string) (Env, error) {
+func loadEnvs(files []string) (*Env, error) {
 	if len(files) == 0 {
 		files = []string{".env"}
 	}
 
-	env := make(Env)
+	env := NewEnv()
 
+	// don't need to lock either environment
 	for _, file := range files {
 		tmpEnv, err := ReadEnv(file)
 
@@ -38,35 +60,40 @@ func loadEnvs(files []string) (Env, error) {
 		}
 
 		// Merge the file I just read into the env.
-		for k, v := range tmpEnv {
-			env[k] = v
-		}
+		tmpEnv.m.Range(func(key, value interface{}) bool {
+			env.m.Store(key, value)
+			return true
+		})
 	}
 	return env, nil
 }
 
-func ReadEnv(filename string) (Env, error) {
+func ReadEnv(filename string) (*Env, error) {
+	env := NewEnv()
+
 	if _, err := os.Stat(filename); os.IsNotExist(err) {
-		return make(Env), nil
+		return env, nil
 	}
+
 	fd, err := os.Open(filename)
 	if err != nil {
 		return nil, err
 	}
 	defer fd.Close()
-	env := make(Env)
+
 	for key, val := range gotenv.Parse(fd) {
-		env[key] = val
+		env.Set(key, val)
 	}
 	return env, nil
 }
 
 func (e *Env) asArray() (env []string) {
-	for _, pair := range os.Environ() {
-		env = append(env, pair)
-	}
-	for name, val := range *e {
+	env = append(env, os.Environ()...)
+
+	e.m.Range(func(name, val interface{}) bool {
 		env = append(env, fmt.Sprintf("%s=%s", name, val))
-	}
+		return true
+	})
+
 	return
 }

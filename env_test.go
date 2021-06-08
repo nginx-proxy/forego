@@ -10,11 +10,11 @@ func TestMultipleEnvironmentFiles(t *testing.T) {
 		t.Fatalf("Could not read environments: %s", err)
 	}
 
-	if env["env1"] == "" {
+	if env.Get("env1") == "" {
 		t.Fatal("$env1 should be present and is not")
 	}
 
-	if env["env2"] == "" {
+	if env.Get("env2") == "" {
 		t.Fatal("$env2 should be present and is not")
 	}
 }

@@ -9,7 +9,7 @@ import (
 	"regexp"
 )
 
-var procfileEntryRegexp = regexp.MustCompile("^([A-Za-z0-9_-]+):\\s*(.+)$")
+var procfileEntryRegexp = regexp.MustCompile(`^([A-Za-z0-9_-]+):\s*(.+)$`)
 
 type ProcfileEntry struct {
 	Name    string
@@ -68,7 +68,7 @@ func parseProcfile(r io.Reader) (*Procfile, error) {
 		}
 	}
 	if err := scanner.Err(); err != nil {
-		return nil, fmt.Errorf("Reading Procfile: %s", err)
+		return nil, fmt.Errorf("reading Procfile: %s", err)
 	}
 	return pf, nil
 }

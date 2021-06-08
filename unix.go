@@ -7,6 +7,8 @@ import (
 	"syscall"
 )
 
+var osShell string = "bash"
+
 const osHaveSigTerm = true
 
 func ShellInvocationCommand(interactive bool, root, command string) []string {
@@ -15,7 +17,7 @@ func ShellInvocationCommand(interactive bool, root, command string) []string {
 		shellArgument = "-ic"
 	}
 	shellCommand := fmt.Sprintf("cd \"%s\"; source .profile 2>/dev/null; exec %s", root, command)
-	return []string{"sh", shellArgument, shellCommand}
+	return []string{osShell, shellArgument, shellCommand}
 }
 
 func (p *Process) PlatformSpecificInit() {
@@ -23,7 +25,6 @@ func (p *Process) PlatformSpecificInit() {
 		p.SysProcAttr = &syscall.SysProcAttr{}
 		p.SysProcAttr.Setsid = true
 	}
-	return
 }
 
 func (p *Process) SendSigTerm() {

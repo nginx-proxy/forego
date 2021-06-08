@@ -8,13 +8,13 @@ import (
 
 type Process struct {
 	Command     string
-	Env         Env
+	Env         *Env
 	Interactive bool
 
 	*exec.Cmd
 }
 
-func NewProcess(workdir, command string, env Env, interactive bool) (p *Process) {
+func NewProcess(workdir, command string, env *Env, interactive bool) (p *Process) {
 	argv := ShellInvocationCommand(interactive, workdir, command)
 	return &Process{
 		command, env, interactive, exec.Command(argv[0], argv[1:]...),

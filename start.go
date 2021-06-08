@@ -121,13 +121,13 @@ func parseConcurrency(value string) (map[string]int, error) {
 	parts := strings.Split(value, ",")
 	for _, part := range parts {
 		if !strings.Contains(part, "=") {
-			return concurrency, errors.New("Concurrency should be in the format: foo=1,bar=2")
+			return concurrency, errors.New("concurrency should be in the format: foo=1,bar=2")
 		}
 
 		nameValue := strings.Split(part, "=")
 		n, v := strings.TrimSpace(nameValue[0]), strings.TrimSpace(nameValue[1])
 		if n == "" || v == "" {
-			return concurrency, errors.New("Concurrency should be in the format: foo=1,bar=2")
+			return concurrency, errors.New("concurrency should be in the format: foo=1,bar=2")
 		}
 
 		numProcs, err := strconv.ParseInt(v, 10, 16)
@@ -169,18 +169,19 @@ func (f *Forego) monitorInterrupt() {
 	}
 }
 
-func basePort(env Env) (int, error) {
+func basePort(env *Env) (int, error) {
+
 	if flagPort != defaultPort {
 		return flagPort, nil
-	} else if env["PORT"] != "" {
-		return strconv.Atoi(env["PORT"])
+	} else if port := env.Get("PORT"); port != "" {
+		return strconv.Atoi(port)
 	} else if os.Getenv("PORT") != "" {
 		return strconv.Atoi(os.Getenv("PORT"))
 	}
 	return defaultPort, nil
 }
 
-func (f *Forego) startProcess(idx, procNum int, proc ProcfileEntry, env Env, of *OutletFactory) {
+func (f *Forego) startProcess(idx, procNum int, proc ProcfileEntry, env *Env, of *OutletFactory) {
 	port, err := basePort(env)
 	if err != nil {
 		panic(err)
@@ -192,7 +193,8 @@ func (f *Forego) startProcess(idx, procNum int, proc ProcfileEntry, env Env, of 
 	workDir := filepath.Dir(flagProcfile)
 	ps := NewProcess(workDir, proc.Command, env, interactive)
 	procName := fmt.Sprint(proc.Name, ".", procNum+1)
-	ps.Env["PORT"] = strconv.Itoa(port)
+
+	ps.Env.Set("PORT", strconv.Itoa(port))
 
 	ps.Stdin = nil
 

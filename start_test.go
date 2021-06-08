@@ -111,7 +111,7 @@ func TestParseConcurrencyFlagNoValue(t *testing.T) {
 }
 
 func TestPortFromEnv(t *testing.T) {
-	env := make(Env)
+	env := NewEnv()
 	port, err := basePort(env)
 	if err != nil {
 		t.Fatalf("Can not get base port: %s", err)
@@ -129,7 +129,7 @@ func TestPortFromEnv(t *testing.T) {
 		t.Fatal("Base port should be 4000")
 	}
 
-	env["PORT"] = "6000"
+	env.Set("PORT", "6000")
 	port, err = basePort(env)
 	if err != nil {
 		t.Fatalf("Can not get base port: %s", err)
@@ -138,8 +138,8 @@ func TestPortFromEnv(t *testing.T) {
 		t.Fatal("Base port should be 6000")
 	}
 
-	env["PORT"] = "forego"
-	port, err = basePort(env)
+	env.Set("PORT", "forego")
+	_, err = basePort(env)
 	if err == nil {
 		t.Fatalf("Port 'forego' should fail: %s", err)
 	}
