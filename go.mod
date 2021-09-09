@@ -1,4 +1,4 @@
-module github.com/nginxproxy/forego
+module github.com/nginx-proxy/forego
 
 go 1.11
 
