@@ -1,0 +1,25 @@
+# Build forego
+FROM golang:1.20.3-alpine as go-builder
+
+RUN apk add --no-cache musl-dev
+
+WORKDIR /build
+
+# Install the dependencies
+COPY . .
+RUN go mod download
+
+RUN CGO_ENABLED=0 go build -o forego . \
+   && go clean -cache
+
+FROM alpine:3.17.3
+
+RUN apk add --no-cache bash
+
+# Install Forego
+COPY --from=go-builder /build/forego /usr/local/bin/forego
+
+COPY /app /app
+WORKDIR /app
+
+CMD ["forego", "start", "-r"]
