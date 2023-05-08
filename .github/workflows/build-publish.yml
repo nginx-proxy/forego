@@ -34,8 +34,10 @@ jobs:
             ghcr.io/nginx-proxy/forego
             nginxproxy/forego
           tags: |
-            type=semver,pattern={{version}}
-            type=semver,pattern={{major}}.{{minor}}
+            type=semver,pattern={{version}},enable=${{ matrix.base == 'alpine' }}
+            type=semver,pattern={{major}}.{{minor}},enable=${{ matrix.base == 'alpine' }}
+            type=semver,suffix=-debian,pattern={{version}},enable=${{ matrix.base == 'debian' }}
+            type=semver,suffix=-debian,pattern={{major}}.{{minor}},enable=${{ matrix.base == 'debian' }}
             type=raw,value=latest,enable=${{ github.ref == 'refs/heads/main' && matrix.base == 'alpine' }}
             type=raw,value=debian,enable=${{ github.ref == 'refs/heads/main' && matrix.base == 'debian' }}
           labels: |
