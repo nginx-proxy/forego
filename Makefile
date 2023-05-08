@@ -10,10 +10,13 @@ build: $(BIN)
 clean:
 	rm -f $(BIN)
 
+get-deps:
+	go mod download
+
 lint: $(SRC)
 	go fmt
 
-test: lint build
+test: lint get-deps build
 	go test -v -race -cover ./...
 
 $(BIN): $(SRC)
