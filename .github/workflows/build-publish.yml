@@ -43,6 +43,8 @@ jobs:
           labels: |
             org.opencontainers.image.authors=Nicolas Duchon <nicolas.duchon@gmail.com> (@buchdag)
             org.opencontainers.image.version=${{ steps.forego_version.outputs.VERSION }}
+          flavor: |
+            latest=false
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v2
