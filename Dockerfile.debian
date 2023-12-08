@@ -10,7 +10,7 @@ RUN go mod download
 RUN CGO_ENABLED=0 GOOS=linux go build -o forego . \
    && go clean -cache
 
-FROM debian:12.1-slim
+FROM debian:12.2-slim
 
 # Install Forego
 COPY --from=go-builder /build/forego /usr/local/bin/forego
