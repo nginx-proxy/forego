@@ -1,5 +1,5 @@
 # Build forego
-FROM golang:1.20.7 as go-builder
+FROM golang:1.20.12 as go-builder
 
 WORKDIR /build
 
