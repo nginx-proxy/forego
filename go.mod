@@ -1,6 +1,6 @@
 module github.com/nginx-proxy/forego
 
-go 1.20
+go 1.21
 
 require (
 	github.com/daviddengcn/go-colortext v1.0.0
