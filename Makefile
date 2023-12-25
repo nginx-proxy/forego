@@ -1,6 +1,9 @@
 BIN = forego
 SRC = $(shell find . -name '*.go')
 
+TAG:=`git describe --tags`
+LDFLAGS:=-X main.buildVersion=$(TAG)
+
 .PHONY: all build clean lint test
 
 all: build
@@ -20,4 +23,4 @@ test: lint get-deps build
 	go test -v -race -cover ./...
 
 $(BIN): $(SRC)
-	go build -o $@
+	go build -ldflags "$(LDFLAGS)" -o $@

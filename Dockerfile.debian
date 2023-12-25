@@ -1,9 +1,11 @@
+ARG FOREGO_VERSION=main
+
 # Build forego
 FROM --platform=$BUILDPLATFORM golang:1.21.5 as go-builder
 
 ENV CGO_ENABLED=0
 
-ARG TARGETOS TARGETARCH TARGETVARIANT
+ARG FOREGO_VERSION TARGETOS TARGETARCH TARGETVARIANT
 ENV GOOS=$TARGETOS GOARCH=$TARGETARCH VARIANT=$TARGETVARIANT
 
 WORKDIR /build
@@ -19,10 +21,13 @@ RUN set -eu; \
 		*) [ -z "$VARIANT" ] ;; \
 	esac; \
 	go env | grep -E 'OS=|ARCH=|ARM=|AMD64='; \
-	go build -o forego .; \
+	go build -ldflags "-X main.buildVersion=${FOREGO_VERSION}" -o forego .; \
 	go clean -cache
 
 FROM --platform=$TARGETPLATFORM debian:12.4-slim
+
+ARG FOREGO_VERSION
+ENV FOREGO_VERSION=${FOREGO_VERSION}
 
 # Install Forego
 COPY --from=go-builder /build/forego /usr/local/bin/forego
