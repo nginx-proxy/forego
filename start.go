@@ -11,8 +11,6 @@ import (
 	"sync"
 	"syscall"
 	"time"
-
-	"golang.org/x/crypto/ssh/terminal"
 )
 
 const defaultPort = 5000
@@ -91,7 +89,7 @@ func init() {
 	cmdStart.Flag.IntVar(&flagShutdownGraceTime, "t", defaultShutdownGraceTime, "shutdown grace time")
 	err := readConfigFile(".forego", &flagProcfile, &flagPort, &flagConcurrency, &flagShutdownGraceTime)
 	handleError(err)
-	colorize = os.Getenv("NO_COLOR") == "" && terminal.IsTerminal(int(os.Stdout.Fd()))
+	colorize = os.Getenv("NO_COLOR") == ""
 }
 
 func readConfigFile(config_path string, flagProcfile *string, flagPort *int, flagConcurrency *string, flagShutdownGraceTime *int) error {
