@@ -26,7 +26,7 @@ RUN set -eu; \
 	go build -ldflags "-X main.buildVersion=${FOREGO_VERSION}" -o forego .; \
 	go clean -cache
 
-FROM --platform=$TARGETPLATFORM alpine:3.20.0
+FROM --platform=$TARGETPLATFORM alpine:3.20.1
 
 ARG FOREGO_VERSION
 ENV FOREGO_VERSION=${FOREGO_VERSION}
