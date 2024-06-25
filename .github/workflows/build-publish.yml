@@ -67,7 +67,7 @@ jobs:
 
       - name: Build and push the image
         id: docker_build
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         with:
           context: .
           build-args: FOREGO_VERSION=${{ steps.forego_version.outputs.VERSION }}
