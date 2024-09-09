@@ -1,7 +1,7 @@
 ARG FOREGO_VERSION=main
 
 # Build forego
-FROM --platform=$BUILDPLATFORM golang:1.23.1 as go-builder
+FROM --platform=$BUILDPLATFORM golang:1.23.1 AS go-builder
 
 ENV CGO_ENABLED=0
 
@@ -24,7 +24,7 @@ RUN set -eu; \
 	go build -ldflags "-X main.buildVersion=${FOREGO_VERSION}" -o forego .; \
 	go clean -cache
 
-FROM --platform=$TARGETPLATFORM debian:12.7-slim
+FROM debian:12.7-slim
 
 ARG FOREGO_VERSION
 ENV FOREGO_VERSION=${FOREGO_VERSION}
