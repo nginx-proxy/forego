@@ -24,7 +24,7 @@ RUN set -eu; \
 	go build -ldflags "-X main.buildVersion=${FOREGO_VERSION}" -o forego .; \
 	go clean -cache
 
-FROM debian:12.8-slim
+FROM debian:12.9-slim
 
 ARG FOREGO_VERSION
 ENV FOREGO_VERSION=${FOREGO_VERSION}
