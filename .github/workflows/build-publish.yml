@@ -32,7 +32,7 @@ jobs:
 
       - name: Get Docker image tags
         id: docker_meta
-        uses: docker/metadata-action@v5
+        uses: docker/metadata-action@v6
         with:
           images: |
             ghcr.io/nginx-proxy/forego
