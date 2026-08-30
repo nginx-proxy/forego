@@ -1,6 +1,7 @@
 package main
 
 import (
+	"maps"
 	"os"
 
 	"github.com/subosito/gotenv"
@@ -18,8 +19,6 @@ func ReadConfig(filename string) (Config, error) {
 	}
 	defer fd.Close()
 	config := make(Config)
-	for key, val := range gotenv.Parse(fd) {
-		config[key] = val
-	}
+	maps.Copy(config, gotenv.Parse(fd))
 	return config, nil
 }
