@@ -225,17 +225,13 @@ func (f *Forego) startProcess(idx, procNum int, proc ProcfileEntry, env *Env, of
 		return
 	}
 
-	f.wg.Add(1)
-	go func() {
-		defer f.wg.Done()
+	f.wg.Go(func() {
 		defer close(finished)
 		pipeWait.Wait()
 		ps.Wait()
-	}()
+	})
 
-	f.wg.Add(1)
-	go func() {
-		defer f.wg.Done()
+	f.wg.Go(func() {
 
 		select {
 		case <-finished:
@@ -265,7 +261,7 @@ func (f *Forego) startProcess(idx, procNum int, proc ProcfileEntry, env *Env, of
 			case <-finished:
 			}
 		}
-	}()
+	})
 }
 
 func runStart(cmd *Command, args []string) {
