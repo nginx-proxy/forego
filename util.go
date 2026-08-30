@@ -8,6 +8,6 @@ import (
 
 var stdout io.Writer = os.Stdout
 
-func Println(a ...interface{}) (n int, err error) {
+func Println(a ...any) (n int, err error) {
 	return fmt.Fprintln(stdout, a...)
 }

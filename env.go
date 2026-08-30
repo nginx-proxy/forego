@@ -60,7 +60,7 @@ func loadEnvs(files []string) (*Env, error) {
 		}
 
 		// Merge the file I just read into the env.
-		tmpEnv.m.Range(func(key, value interface{}) bool {
+		tmpEnv.m.Range(func(key, value any) bool {
 			env.m.Store(key, value)
 			return true
 		})
@@ -90,7 +90,7 @@ func ReadEnv(filename string) (*Env, error) {
 func (e *Env) asArray() (env []string) {
 	env = append(env, os.Environ()...)
 
-	e.m.Range(func(name, val interface{}) bool {
+	e.m.Range(func(name, val any) bool {
 		env = append(env, fmt.Sprintf("%s=%s", name, val))
 		return true
 	})

@@ -13,7 +13,7 @@ func TestVersion(t *testing.T) {
 	assertEqual(t, output, "dev\n")
 }
 
-func assertEqual(t *testing.T, a, b interface{}) {
+func assertEqual(t *testing.T, a, b any) {
 	if a != b {
 		t.Fatalf(`Expected %#v to equal %#v`, a, b)
 	}
