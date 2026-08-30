@@ -120,8 +120,8 @@ func parseConcurrency(value string) (map[string]int, error) {
 		return concurrency, nil
 	}
 
-	parts := strings.Split(value, ",")
-	for _, part := range parts {
+	parts := strings.SplitSeq(value, ",")
+	for part := range parts {
 		if !strings.Contains(part, "=") {
 			return concurrency, errors.New("concurrency should be in the format: foo=1,bar=2")
 		}
