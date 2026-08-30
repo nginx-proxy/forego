@@ -1,4 +1,4 @@
-// +build windows
+//go:build windows
 
 package main
 
@@ -14,7 +14,6 @@ func ShellInvocationCommand(interactive bool, root, command string) []string {
 
 func (p *Process) PlatformSpecificInit() {
 	// NOP on windows for now.
-	return
 }
 
 func (p *Process) SendSigTerm() {
