@@ -120,8 +120,8 @@ func parseConcurrency(value string) (map[string]int, error) {
 		return concurrency, nil
 	}
 
-	parts := strings.Split(value, ",")
-	for _, part := range parts {
+	parts := strings.SplitSeq(value, ",")
+	for part := range parts {
 		if !strings.Contains(part, "=") {
 			return concurrency, errors.New("concurrency should be in the format: foo=1,bar=2")
 		}
@@ -225,17 +225,13 @@ func (f *Forego) startProcess(idx, procNum int, proc ProcfileEntry, env *Env, of
 		return
 	}
 
-	f.wg.Add(1)
-	go func() {
-		defer f.wg.Done()
+	f.wg.Go(func() {
 		defer close(finished)
 		pipeWait.Wait()
 		ps.Wait()
-	}()
+	})
 
-	f.wg.Add(1)
-	go func() {
-		defer f.wg.Done()
+	f.wg.Go(func() {
 
 		select {
 		case <-finished:
@@ -265,7 +261,7 @@ func (f *Forego) startProcess(idx, procNum int, proc ProcfileEntry, env *Env, of
 			case <-finished:
 			}
 		}
-	}()
+	})
 }
 
 func runStart(cmd *Command, args []string) {
